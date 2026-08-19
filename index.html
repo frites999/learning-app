@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#ffffff">
+  <title>さんすう れんしゅう</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+    <header>
+      <h1>🌟 さんすう れんしゅう</h1>
+      <p id="subtitle">たのしく れんしゅうしよう！</p>
+    </header>
+
+    <section id="menu" class="screen">
+      <h2>なにを れんしゅうする？</h2>
+
+      <div class="menu-group">
+        <h3>➕ たしざん</h3>
+        <button class="menu-button easy" data-mode="add-easy">
+          <span>かんたん</span>
+          <small>10まで</small>
+        </button>
+        <button class="menu-button hard" data-mode="add-hard">
+          <span>むずかしい</span>
+          <small>20まで</small>
+        </button>
+      </div>
+
+      <div class="menu-group">
+        <h3>➖ ひきざん</h3>
+        <button class="menu-button easy" data-mode="sub-easy">
+          <span>かんたん</span>
+          <small>10まで</small>
+        </button>
+      </div>
+    </section>
+
+    <section id="quiz" class="screen hidden">
+      <div class="quiz-top">
+        <button id="back-button" class="small-button">← もどる</button>
+        <div id="progress">1 / 10</div>
+        <div id="score">⭐ 0</div>
+      </div>
+
+      <div class="question-card">
+        <div id="question" aria-live="polite">1 ＋ 2 ＝ ?</div>
+      </div>
+
+      <div id="answers" class="answers"></div>
+
+      <div id="message" class="message" aria-live="polite"></div>
+    </section>
+
+    <section id="result" class="screen hidden">
+      <div class="result-card">
+        <div class="result-icon">🎉</div>
+        <h2>おつかれさま！</h2>
+        <p id="result-text">10もん おわったよ！</p>
+        <div id="result-score" class="result-score">10 / 10</div>
+        <button id="again-button" class="main-button">もういちど！</button>
+        <button id="menu-button" class="secondary-button">メニューへ</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
