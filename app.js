@@ -76,18 +76,18 @@ function makeQuestion(mode) {
   let operator;
 
   if (mode === "add-easy") {
-    // 10までのたしざん
-    a = randomInt(0, 10);
-    b = randomInt(0, 10 - a);
-    answer = a + b;
-    operator = "＋";
-  } else if (mode === "add-hard") {
-    // 20までのたしざん
-    a = randomInt(0, 20);
-    b = randomInt(0, 20 - a);
-    answer = a + b;
-    operator = "＋";
-  } else if (mode === "sub-easy") {
+  // 10までのたしざん（0は使わない）
+  a = randomInt(1, 9);
+  b = randomInt(1, 10 - a);
+  answer = a + b;
+  operator = "＋";
+} else if (mode === "add-hard") {
+  // 20までのたしざん（0は使わない）
+  a = randomInt(1, 19);
+  b = randomInt(1, 20 - a);
+  answer = a + b;
+  operator = "＋";
+} else if (mode === "sub-easy") {
     // 10までのひきざん。答えがマイナスにならない。
     a = randomInt(0, 10);
     b = randomInt(0, a);
