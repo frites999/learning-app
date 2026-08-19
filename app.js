@@ -101,8 +101,8 @@ function makeQuestion(mode) {
 
   } else if (mode === "sub-easy") {
     // 10までのひきざん
-    // 0は使わない
-    // 答えも0にはしない
+    // aもbも1以上
+    // 答えも1以上
     a = randomInt(2, 10);
     b = randomInt(1, a - 1);
     answer = a - b;
@@ -115,7 +115,10 @@ function makeQuestion(mode) {
 function renderAnswers(question) {
   answersEl.innerHTML = "";
 
-  const answers = makeAnswerChoices(question.answer);
+  const answers = makeAnswerChoices(
+    question.answer,
+    currentMode
+  );
 
   answers.forEach((answer) => {
     const button = document.createElement("button");
@@ -132,15 +135,23 @@ function renderAnswers(question) {
   });
 }
 
-function makeAnswerChoices(correct) {
+function makeAnswerChoices(correct, mode) {
   const choices = new Set([correct]);
 
   while (choices.size < 4) {
     const offset = randomInt(-3, 3);
     const candidate = correct + offset;
 
-    if (candidate >= 0 && candidate !== correct) {
-      choices.add(candidate);
+    // ひきざんは答えの選択肢も1以上にする
+    if (mode === "sub-easy") {
+      if (candidate >= 1 && candidate !== correct) {
+        choices.add(candidate);
+      }
+    } else {
+      // たしざんも0を選択肢に出さない
+      if (candidate >= 1 && candidate !== correct) {
+        choices.add(candidate);
+      }
     }
   }
 
@@ -152,40 +163,44 @@ function checkAnswer(selected, button) {
 
   locked = true;
 
-  const buttons = [...document.querySelectorAll(".answer-button")];
+  const buttons = [
+    ...document.querySelectorAll(".answer-button")
+  ];
 
   buttons.forEach((btn) => {
     btn.disabled = true;
   });
 
   if (selected === currentQuestion.answer) {
-    // 正解
     score++;
 
     button.classList.add("correct");
 
-    messageEl.textContent = "⭕ せいかい！ すごい！";
+    messageEl.textContent =
+      "⭕ せいかい！ すごい！";
+
     scoreEl.textContent = `⭐ ${score}`;
 
-    // 正解の場合は少し待って自動的に次へ
+    // 正解なら自動的に次へ
     setTimeout(showNextQuestion, 850);
 
   } else {
-    // 不正解
     button.classList.add("wrong");
 
     messageEl.textContent =
       `❌ おしい！ こたえは ${currentQuestion.answer}`;
 
     const correctButton = buttons.find(
-      (btn) => Number(btn.textContent) === currentQuestion.answer
+      (btn) =>
+        Number(btn.textContent) ===
+        currentQuestion.answer
     );
 
     if (correctButton) {
       correctButton.classList.add("correct");
     }
 
-    // 「つぎへ」ボタンを表示
+    // 間違えたときは「つぎへ」を表示
     nextButton.classList.remove("hidden");
   }
 }
