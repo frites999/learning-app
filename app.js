@@ -76,21 +76,27 @@ function makeQuestion(mode) {
   let operator;
 
   if (mode === "add-easy") {
-  // 10までのたしざん（0は使わない）
-  a = randomInt(1, 9);
-  b = randomInt(1, 10 - a);
-  answer = a + b;
-  operator = "＋";
-} else if (mode === "add-hard") {
-  // 20までのたしざん（0は使わない）
-  a = randomInt(1, 19);
-  b = randomInt(1, 20 - a);
-  answer = a + b;
-  operator = "＋";
-} else if (mode === "sub-easy") {
-    // 10までのひきざん。答えがマイナスにならない。
-    a = randomInt(0, 10);
-    b = randomInt(0, a);
+    // 10までのたしざん
+    // 使う数字は1以上
+    a = randomInt(1, 9);
+    b = randomInt(1, 10 - a);
+    answer = a + b;
+    operator = "＋";
+
+  } else if (mode === "add-hard") {
+    // 20までのたしざん
+    // 使う数字は1以上
+    a = randomInt(1, 19);
+    b = randomInt(1, 20 - a);
+    answer = a + b;
+    operator = "＋";
+
+  } else if (mode === "sub-easy") {
+    // 10までのひきざん
+    // 使う数字は1以上
+    // 答えも0にはしない
+    a = randomInt(2, 10);
+    b = randomInt(1, a - 1);
     answer = a - b;
     operator = "−";
   }
@@ -105,10 +111,15 @@ function renderAnswers(question) {
 
   answers.forEach((answer) => {
     const button = document.createElement("button");
+
     button.className = "answer-button";
     button.textContent = answer;
     button.setAttribute("aria-label", `${answer}`);
-    button.addEventListener("click", () => checkAnswer(answer, button));
+
+    button.addEventListener("click", () => {
+      checkAnswer(answer, button);
+    });
+
     answersEl.appendChild(button);
   });
 }
@@ -134,24 +145,31 @@ function checkAnswer(selected, button) {
   locked = true;
 
   const buttons = [...document.querySelectorAll(".answer-button")];
+
   buttons.forEach((btn) => {
     btn.disabled = true;
   });
 
   if (selected === currentQuestion.answer) {
     score++;
+
     button.classList.add("correct");
+
     messageEl.textContent = "⭕ せいかい！ すごい！";
     scoreEl.textContent = `⭐ ${score}`;
 
     setTimeout(showNextQuestion, 850);
+
   } else {
     button.classList.add("wrong");
-    messageEl.textContent = `❌ おしい！ こたえは ${currentQuestion.answer}`;
+
+    messageEl.textContent =
+      `❌ おしい！ こたえは ${currentQuestion.answer}`;
 
     const correctButton = buttons.find(
       (btn) => Number(btn.textContent) === currentQuestion.answer
     );
+
     if (correctButton) {
       correctButton.classList.add("correct");
     }
@@ -164,16 +182,24 @@ function showResult() {
   quiz.classList.add("hidden");
   result.classList.remove("hidden");
 
-  resultScoreEl.textContent = `${score} / ${TOTAL_QUESTIONS}`;
+  resultScoreEl.textContent =
+    `${score} / ${TOTAL_QUESTIONS}`;
 
   if (score === TOTAL_QUESTIONS) {
-    resultTextEl.textContent = "ぜんぶ せいかい！ すごいね！ 🌟";
+    resultTextEl.textContent =
+      "ぜんぶ せいかい！ すごいね！ 🌟";
+
   } else if (score >= 7) {
-    resultTextEl.textContent = "よくできました！ もうすこしで まんてん！";
+    resultTextEl.textContent =
+      "よくできました！ もうすこしで まんてん！";
+
   } else if (score >= 4) {
-    resultTextEl.textContent = "がんばったね！ もういちど やってみよう！";
+    resultTextEl.textContent =
+      "がんばったね！ もういちど やってみよう！";
+
   } else {
-    resultTextEl.textContent = "れんしゅう おつかれさま！ またやってみよう！";
+    resultTextEl.textContent =
+      "れんしゅう おつかれさま！ またやってみよう！";
   }
 }
 
@@ -181,17 +207,25 @@ function showMenu() {
   quiz.classList.add("hidden");
   result.classList.add("hidden");
   menu.classList.remove("hidden");
+
   messageEl.textContent = "";
 }
 
 function randomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  return Math.floor(
+    Math.random() * (max - min + 1)
+  ) + min;
 }
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
+    const j = randomInt(0, i);
+
+    [array[i], array[j]] = [
+      array[j],
+      array[i]
+    ];
   }
+
   return array;
 }
