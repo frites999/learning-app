@@ -15,6 +15,7 @@ const resultTextEl = document.getElementById("result-text");
 const backButton = document.getElementById("back-button");
 const againButton = document.getElementById("again-button");
 const menuButton = document.getElementById("menu-button");
+const nextButton = document.getElementById("next-button");
 
 let currentMode = null;
 let currentQuestion = null;
@@ -36,6 +37,8 @@ againButton.addEventListener("click", () => {
 
 menuButton.addEventListener("click", showMenu);
 
+nextButton.addEventListener("click", showNextQuestion);
+
 function startQuiz(mode) {
   currentMode = mode;
   questionNumber = 0;
@@ -45,6 +48,8 @@ function startQuiz(mode) {
   menu.classList.add("hidden");
   result.classList.add("hidden");
   quiz.classList.remove("hidden");
+
+  nextButton.classList.add("hidden");
 
   showNextQuestion();
 }
@@ -57,7 +62,10 @@ function showNextQuestion() {
 
   questionNumber++;
   locked = false;
+
   messageEl.textContent = "";
+  nextButton.classList.add("hidden");
+
   progressEl.textContent = `${questionNumber} / ${TOTAL_QUESTIONS}`;
   scoreEl.textContent = `⭐ ${score}`;
 
@@ -77,7 +85,7 @@ function makeQuestion(mode) {
 
   if (mode === "add-easy") {
     // 10までのたしざん
-    // 使う数字は1以上
+    // 0は使わない
     a = randomInt(1, 9);
     b = randomInt(1, 10 - a);
     answer = a + b;
@@ -85,7 +93,7 @@ function makeQuestion(mode) {
 
   } else if (mode === "add-hard") {
     // 20までのたしざん
-    // 使う数字は1以上
+    // 0は使わない
     a = randomInt(1, 19);
     b = randomInt(1, 20 - a);
     answer = a + b;
@@ -93,7 +101,7 @@ function makeQuestion(mode) {
 
   } else if (mode === "sub-easy") {
     // 10までのひきざん
-    // 使う数字は1以上
+    // 0は使わない
     // 答えも0にはしない
     a = randomInt(2, 10);
     b = randomInt(1, a - 1);
@@ -151,6 +159,7 @@ function checkAnswer(selected, button) {
   });
 
   if (selected === currentQuestion.answer) {
+    // 正解
     score++;
 
     button.classList.add("correct");
@@ -158,9 +167,11 @@ function checkAnswer(selected, button) {
     messageEl.textContent = "⭕ せいかい！ すごい！";
     scoreEl.textContent = `⭐ ${score}`;
 
+    // 正解の場合は少し待って自動的に次へ
     setTimeout(showNextQuestion, 850);
 
   } else {
+    // 不正解
     button.classList.add("wrong");
 
     messageEl.textContent =
@@ -174,7 +185,8 @@ function checkAnswer(selected, button) {
       correctButton.classList.add("correct");
     }
 
-    setTimeout(showNextQuestion, 1400);
+    // 「つぎへ」ボタンを表示
+    nextButton.classList.remove("hidden");
   }
 }
 
@@ -209,6 +221,7 @@ function showMenu() {
   menu.classList.remove("hidden");
 
   messageEl.textContent = "";
+  nextButton.classList.add("hidden");
 }
 
 function randomInt(min, max) {
